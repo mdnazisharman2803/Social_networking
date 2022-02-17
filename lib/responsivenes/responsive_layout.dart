@@ -1,17 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:we_connect/responsivenes/webScreen.dart';
 import '../assets/screenmanagement.dart';
 import '../providers/user_statemanagement.dart';
 
 class ResponsiveLayout extends StatefulWidget {
+  final Widget mobileScreenLayout;
   final Widget webScreenLayout;
-  final Widget phoneScreenLayout;
-
   const ResponsiveLayout({
     Key? key,
+    required this.mobileScreenLayout,
     required this.webScreenLayout,
-    required this.phoneScreenLayout,
   }) : super(key: key);
 
   @override
@@ -38,7 +36,7 @@ class _ResponsiveLayoutState extends State<ResponsiveLayout> {
         // 600 can be changed to 900 if you want to display tablet screen with mobile screen layout
         return widget.webScreenLayout;
       }
-      return widget.phoneScreenLayout;
+      return widget.mobileScreenLayout;
     });
   }
 }

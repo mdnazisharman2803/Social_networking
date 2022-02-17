@@ -1,5 +1,5 @@
 import 'dart:typed_data';
-
+import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'posteddata.dart';
 import 'storage.dart';
@@ -16,11 +16,11 @@ class FireStoreMethods {
     String profImage,
   ) async {
     // asking uid here because we dont want to make extra calls to firebase auth when we can just get from our state management
-    String result = "Some error occurred";
+    String res = "Some error occurred";
     try {
-      String imageUrl =
+      String photoUrl =
           await StorageMethods().uploadImageToStorage('posts', file, true);
-      String postId = const Uuid().v1();// creates unique id based on time
+      String postId = const Uuid().v1(); // creates unique id based on time
       Post post = Post(
         description: description,
         uid: uid,
@@ -28,19 +28,22 @@ class FireStoreMethods {
         likes: [],
         postId: postId,
         datePublished: DateTime.now(),
-        postUrl: imageUrl,
+        postUrl: photoUrl,
         profImage: profImage,
       );
-      _firestore.collection('posts').doc(postId).set(post.toJson());
-      result = "success";
-    } catch (error) {
-      result = error.toString();
+      _firestore.collection('posts').doc(postId).set(
+            post.toJson(),
+          );
+      res = "success";
+    } catch (err) {
+      res = err.toString();
     }
-    return result;
+    return res;
   }
 
+//like
   Future<String> likePost(String postId, String uid, List likes) async {
-    String result = "Some error occurred";
+    String res = "Some error occurred";
     try {
       if (likes.contains(uid)) {
         // if the likes list contains the user uid, we need to remove it
@@ -53,11 +56,11 @@ class FireStoreMethods {
           'likes': FieldValue.arrayUnion([uid])
         });
       }
-      result = 'success';
-    } catch (error) {
-      result = error.toString();
+      res = 'success';
+    } catch (err) {
+      res = err.toString();
     }
-    return result;
+    return res;
   }
 
   // Post comment

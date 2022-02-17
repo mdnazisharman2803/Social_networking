@@ -1,22 +1,24 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../assets/screenmanagement.dart';
 import '../assets/colors.dart';
 
-
-class phoneScreen extends StatefulWidget {
-  const phoneScreen({Key? key}) : super(key: key);
+class MobileScreenLayout extends StatefulWidget {
+  const MobileScreenLayout({Key? key}) : super(key: key);
 
   @override
-  State<phoneScreen> createState() => _phoneScreen();
+  State<MobileScreenLayout> createState() => _MobileScreenLayoutState();
 }
 
-class _phoneScreen extends State<phoneScreen> {
+class _MobileScreenLayoutState extends State<MobileScreenLayout> {
   int _page = 0;
+  //string username="";
   late PageController pageController; // for tabs animation
 
   @override
   void initState() {
     super.initState();
+    //getusername();
     pageController = PageController();
   }
 
@@ -37,6 +39,19 @@ class _phoneScreen extends State<phoneScreen> {
     pageController.jumpToPage(page);
   }
 
+/*
+//another way to asses any data suppose username other than statemanagement by provider
+void getusername() async{
+  DoccumentSnapshot snap=await FirebaseFirestore.instance
+  .collection('users')
+  .doc(Firebase.instance.currentUser!.uid).get();
+
+  setstate((){
+username=(snap.data() as Map<String,dynamic>)['username];
+  });
+}
+
+ */
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -45,7 +60,7 @@ class _phoneScreen extends State<phoneScreen> {
         controller: pageController,
         onPageChanged: onPageChanged,
       ),
-      bottomNavigationBar: BottomNavigationBar(
+      bottomNavigationBar: CupertinoTabBar(
         backgroundColor: mobileBackgroundColor,
         items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(

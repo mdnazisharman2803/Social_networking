@@ -4,7 +4,7 @@ import '../models/auth.dart';
 
 //inheriting some function to our class from changenotifier
 class UserProvider with ChangeNotifier {
-  User? _user; //nullable
+  User? _user;
   final AuthMethods _authMethods = AuthMethods();
 
   User get getUser => _user!;

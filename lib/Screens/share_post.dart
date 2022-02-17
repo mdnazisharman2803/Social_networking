@@ -8,14 +8,14 @@ import '../assets/colors.dart';
 import '../assets/imagepickerandsnackbar.dart';
 import 'package:provider/provider.dart';
 
-class SharePostScreen extends StatefulWidget {
-  const SharePostScreen({Key? key}) : super(key: key);
+class AddPostScreen extends StatefulWidget {
+  const AddPostScreen({Key? key}) : super(key: key);
 
   @override
-  _SharePostScreenState createState() => _SharePostScreenState();
+  _AddPostScreenState createState() => _AddPostScreenState();
 }
 
-class _SharePostScreenState extends State<SharePostScreen> {
+class _AddPostScreenState extends State<AddPostScreen> {
   Uint8List? _file;
   bool isLoading = false;
   final TextEditingController _descriptionController = TextEditingController();
@@ -29,7 +29,7 @@ class _SharePostScreenState extends State<SharePostScreen> {
           children: <Widget>[
             SimpleDialogOption(
                 padding: const EdgeInsets.all(20),
-                child: const Text('Capture a photo'),
+                child: const Text('Take a photo'),
                 onPressed: () async {
                   Navigator.pop(context);
                   Uint8List file = await pickImage(ImageSource.camera);
@@ -60,39 +60,43 @@ class _SharePostScreenState extends State<SharePostScreen> {
     );
   }
 
-  void postImage(String uid, String username, String profImage) async {
+  void postImage(
+    String uid,
+    String username,
+    String profImage,
+  ) async {
     setState(() {
       isLoading = true;
     });
     // start the loading
     try {
       // upload to storage and db
-      String result = await FireStoreMethods().uploadPost(
+      String res = await FireStoreMethods().uploadPost(
         _descriptionController.text,
         _file!,
         uid,
         username,
         profImage,
       );
-      if (result == "success") {
+      if (res == "success") {
         setState(() {
           isLoading = false;
         });
         showSnackBar(
           context,
-          'Post Shared!',
+          'Posted!',
         );
         clearImage();
       } else {
-        showSnackBar(context, result);
+        showSnackBar(context, res);
       }
-    } catch (error) {
+    } catch (err) {
       setState(() {
         isLoading = false;
       });
       showSnackBar(
         context,
-        error.toString(),
+        err.toString(),
       );
     }
   }
@@ -117,7 +121,7 @@ class _SharePostScreenState extends State<SharePostScreen> {
         ? Center(
             child: IconButton(
               icon: const Icon(
-                Icons.upgrade,
+                Icons.upload,
               ),
               onPressed: () => _selectImage(context),
             ),
@@ -130,7 +134,7 @@ class _SharePostScreenState extends State<SharePostScreen> {
                 onPressed: clearImage,
               ),
               title: const Text(
-                'Share Post',
+                'Post to',
               ),
               centerTitle: false,
               actions: <Widget>[
@@ -138,14 +142,15 @@ class _SharePostScreenState extends State<SharePostScreen> {
                   onPressed: () => postImage(
                     userProvider.getUser.uid,
                     userProvider.getUser.username,
-                    userProvider.getUser.imageUrl,
+                    userProvider.getUser.photoUrl,
                   ),
                   child: const Text(
                     "Post",
                     style: TextStyle(
-                        color: Colors.blueAccent,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16.0),
+                      color: Color(0xffFFD700),
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16.0,
+                    ),
                   ),
                 )
               ],
@@ -163,16 +168,17 @@ class _SharePostScreenState extends State<SharePostScreen> {
                   children: <Widget>[
                     CircleAvatar(
                       backgroundImage: NetworkImage(
-                        userProvider.getUser.imageUrl,
+                        userProvider.getUser.photoUrl,
                       ),
                     ),
                     SizedBox(
-                      width: MediaQuery.of(context).size.width * 0.45,
+                      width: MediaQuery.of(context).size.width * 0.3,
                       child: TextField(
                         controller: _descriptionController,
                         decoration: const InputDecoration(
-                            hintText: "What do you want to post about?",
-                            border: InputBorder.none),
+                          hintText: "Write a caption...",
+                          border: InputBorder.none,
+                        ),
                         maxLines: 8,
                       ),
                     ),

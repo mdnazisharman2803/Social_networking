@@ -1,17 +1,16 @@
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
-
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
-import '../models/auth.dart';
-import '../assets/imagepickerandsnackbar.dart';
-import '../responsivenes/phoneScreen.dart';
-import '../responsivenes/webScreen.dart';
-import '../responsivenes/responsive_layout.dart';
-import '../assets/colors.dart';
-import '../widgets/textfield_skltn.dart';
-import '../assets/screenmanagement.dart';
 import 'login.dart';
+import '../assets/colors.dart';
+import '../assets/imagepickerandsnackbar.dart';
+import '../assets/screenmanagement.dart';
+import '../models/auth.dart';
+import '../responsivenes/phoneScreen.dart';
+import '../responsivenes/responsive_layout.dart';
+import '../responsivenes/webScreen.dart';
+import '../widgets/textfield_skltn.dart';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({Key? key}) : super(key: key);
@@ -24,9 +23,11 @@ class _SignupScreenState extends State<SignupScreen> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _aboutController = TextEditingController();
+  final TextEditingController _bioController = TextEditingController();
   bool _isLoading = false;
   Uint8List? _image;
+
+  get style => null;
 
   @override
   void dispose() {
@@ -43,14 +44,15 @@ class _SignupScreenState extends State<SignupScreen> {
     });
 
     // signup user using our authmethodds
-    String result = await AuthMethods().signUpUser(
-        email: _emailController.text,
-        password: _passwordController.text,
-        username: _usernameController.text,
-        about: _aboutController.text,
-        file: _image!);
+    String res = await AuthMethods().signUpUser(
+      email: _emailController.text,
+      password: _passwordController.text,
+      username: _usernameController.text,
+      bio: _bioController.text,
+      file: _image!,
+    );
     // if string returned is sucess, user has been created
-    if (result == "success") {
+    if (res == "success") {
       setState(() {
         _isLoading = false;
       });
@@ -58,9 +60,9 @@ class _SignupScreenState extends State<SignupScreen> {
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
           builder: (context) => const ResponsiveLayout(
-            webScreenLayout: webScreen(),
-            phoneScreenLayout: phoneScreen(),
-            ),
+            mobileScreenLayout: MobileScreenLayout(),
+            webScreenLayout: WebScreenLayout(),
+          ),
         ),
       );
     } else {
@@ -68,15 +70,15 @@ class _SignupScreenState extends State<SignupScreen> {
         _isLoading = false;
       });
       // show the error
-      showSnackBar(context, result);
+      showSnackBar(context, res);
     }
   }
 
   selectImage() async {
-    Uint8List img = await pickImage(ImageSource.gallery);
+    Uint8List im = await pickImage(ImageSource.gallery);
     // set state because we need to display the image we selected on the circle avatar
     setState(() {
-      _image = img;
+      _image = im;
     });
   }
 
@@ -86,7 +88,10 @@ class _SignupScreenState extends State<SignupScreen> {
       resizeToAvoidBottomInset: false,
       body: SafeArea(
         child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 32),
+          padding: MediaQuery.of(context).size.width > webScreenSize
+              ? EdgeInsets.symmetric(
+                  horizontal: MediaQuery.of(context).size.width / 3)
+              : const EdgeInsets.symmetric(horizontal: 32),
           width: double.infinity,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -95,7 +100,16 @@ class _SignupScreenState extends State<SignupScreen> {
                 child: Container(),
                 flex: 2,
               ),
-             
+              Container(
+                child: Text(
+                  'WECONNECT',
+                  style: GoogleFonts.comforter(
+                    textStyle: style,
+                    fontSize: 35,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
               const SizedBox(
                 height: 64,
               ),
@@ -105,14 +119,14 @@ class _SignupScreenState extends State<SignupScreen> {
                       ? CircleAvatar(
                           radius: 64,
                           backgroundImage: MemoryImage(_image!),
-                          backgroundColor: Colors.red,
+                          backgroundColor: Color(0xffFFD700),
                         )
                       : const CircleAvatar(
                           radius: 64,
                           backgroundImage: NetworkImage(
-                              'https://yorktonrentals.com/wp-content/uploads/2017/06/usericon.png',
-                              ),
-                          backgroundColor: Colors.red,
+                            'https://media.istockphoto.com/vectors/male-profile-flat-blue-simple-icon-with-long-shadow-vector-id522855255?k=20&m=522855255&s=612x612&w=0&h=fLLvwEbgOmSzk1_jQ0MgDATEVcVOh_kqEe0rqi7aM5A=',
+                          ),
+                          backgroundColor: Color(0xffFFD700),
                         ),
                   Positioned(
                     bottom: -10,
@@ -120,6 +134,7 @@ class _SignupScreenState extends State<SignupScreen> {
                     child: IconButton(
                       onPressed: selectImage,
                       icon: const Icon(Icons.add_a_photo),
+                      color: Color(0xffFFD700),
                     ),
                   )
                 ],
@@ -153,9 +168,9 @@ class _SignupScreenState extends State<SignupScreen> {
                 height: 24,
               ),
               TextFieldInput(
-                hintText: 'Enter about yourself',
+                hintText: 'Enter your bio',
                 textInputType: TextInputType.text,
-                textEditingController: _aboutController,
+                textEditingController: _bioController,
               ),
               const SizedBox(
                 height: 24,
@@ -176,7 +191,7 @@ class _SignupScreenState extends State<SignupScreen> {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.all(Radius.circular(4)),
                     ),
-                    color: blueColor,
+                    color: Color(0xffFFD700),
                   ),
                 ),
                 onTap: signUpUser,

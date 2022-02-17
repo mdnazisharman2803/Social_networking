@@ -23,9 +23,8 @@ class StorageMethods {
     UploadTask uploadTask = ref.putData(
       file
     );
-//if we  await upload task gives us snapshot
+
     TaskSnapshot snapshot = await uploadTask;
-    // we can get image url and can display to other user by that link
     String downloadUrl = await snapshot.ref.getDownloadURL();
     return downloadUrl;
   }

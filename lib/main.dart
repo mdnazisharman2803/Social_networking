@@ -5,11 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/user_statemanagement.dart';
 import '../Screens/login.dart';
-
 import '../assets/colors.dart';
-
 import './responsivenes/responsive_layout.dart';
-
 import './responsivenes/webScreen.dart';
 import './responsivenes/phoneScreen.dart';
 
@@ -48,7 +45,12 @@ class MyApp extends StatelessWidget {
         theme: ThemeData.dark().copyWith(
           scaffoldBackgroundColor: mobileBackgroundColor,
         ),
+        //stream builder for persisting screen
         home: StreamBuilder(
+          //stream: FirebaseAuth.instance.idTokenChanges(),   //run whenever id token changes,
+          //stream: FirebaseAuth.instance.userChanges(),  // saame like above but we can update id and pasword
+
+//below method runs only when user is signes in or sign out
           stream: FirebaseAuth.instance.authStateChanges(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.active) {
@@ -56,8 +58,8 @@ class MyApp extends StatelessWidget {
               if (snapshot.hasData) {
                 // if snapshot has data which means user is logged in then we check the width of screen and accordingly display the screen layout
                 return const ResponsiveLayout(
-                  webScreenLayout: webScreen(),
-                  phoneScreenLayout: phoneScreen(),
+                  mobileScreenLayout: MobileScreenLayout(),
+                  webScreenLayout: WebScreenLayout(),
                 );
               } else if (snapshot.hasError) {
                 return Center(

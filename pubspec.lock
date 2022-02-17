@@ -64,6 +64,20 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.15.0"
+  colour:
+    dependency: transitive
+    description:
+      name: colour
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.5"
+  colours:
+    dependency: "direct main"
+    description:
+      name: colours
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.2"
   cross_file:
     dependency: transitive
     description:
@@ -188,6 +202,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.5"
+  flutter_staggered_grid_view:
+    dependency: "direct main"
+    description:
+      name: flutter_staggered_grid_view
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.6.1"
   flutter_test:
     dependency: "direct dev"
     description: flutter
@@ -241,7 +262,7 @@ packages:
     source: hosted
     version: "2.4.3"
   intl:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: intl
       url: "https://pub.dartlang.org"
@@ -345,6 +366,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.11.1"
+  pigment:
+    dependency: transitive
+    description:
+      name: pigment
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.4"
   platform:
     dependency: transitive
     description:
